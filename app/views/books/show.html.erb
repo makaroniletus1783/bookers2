@@ -29,9 +29,48 @@
                <td><%= link_to "Edit", edit_book_path(@books), class:"btn btn-sm btn-success" %> </td>
                <td><%= link_to "Destroy", book_path(@books), method: :delete, data: {confirm: '本当に削除しますか？' }, class:"btn btn-sm btn-danger" %></td>
                <% end %>
+               <td>
+                 <% if @books.favorited_by?(current_user) %>
+                   <%= link_to book_favorites_path(@books), method: :delete do %>
+                     <div id="color"><i class="fas fa-heart"></i><%= @books.favorites.count %></div>
+                   <% end %>
+                 <% else %>
+                   <%= link_to book_favorites_path(@books), method: :post do %>
+                    <i class="fas fa-heart"></i><%= @books.favorites.count %>
+                   <% end %>
+                 <% end %>
+               </td>
+               <td>
+                 <p>コメント数：<%= @books.book_comments.count %></p>
+               </td>
             </tr>
           </tbody>
-       </table>
+         </table>
+         <% @books.book_comments.each do |book_comment| %>
+          <div class="comment">
+            <div>
+             <%= attachment_image_tag book_comment.user, :profile_image,format: 'jpeg', fallback: "no_image.jpg", size: "40x40" %><br />
+             <%= link_to book_comment.user.name, user_path(@books.user) %>
+            </div>
+            <div class="author">
+             <%= book_comment.comment %>
+             <% if book_comment.user == current_user %>
+               <%= link_to "Destroy", book_book_comment_path(book_comment.book, book_comment), method: :delete, data: {confirm: '本当に削除しますか？' }, class:"btn btn-sm btn-danger" %><br />
+             <% else %>
+              <br />
+             <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div>
+          <%= form_with(model:[@books, @book_comment], local: true) do |f| %>
+         <div class="form-group" >
+          <%=f.text_area :comment, class:"form-control book_body" %>
+          </div>
+          <%= f.submit "送信" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

@@ -32,3 +32,20 @@ div.field, div.actions {
 #notice {
     color: green;
 }
+
+#color {
+    color: red;
+}
+
+a:hover {
+    color: blue;
+}
+
+.comment {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.author {
+    padding-top: 15px;
+}
